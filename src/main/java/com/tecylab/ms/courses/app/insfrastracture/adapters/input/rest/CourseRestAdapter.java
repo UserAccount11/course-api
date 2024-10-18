@@ -1,7 +1,7 @@
 package com.tecylab.ms.courses.app.insfrastracture.adapters.input.rest;
 
 import com.tecylab.ms.courses.app.application.ports.input.CourseInputPort;
-import com.tecylab.ms.courses.app.application.ports.input.StudentsInputPort;
+import com.tecylab.ms.courses.app.application.ports.input.ExternalStudentsInputPort;
 import com.tecylab.ms.courses.app.domain.models.Course;
 import com.tecylab.ms.courses.app.domain.models.Student;
 import com.tecylab.ms.courses.app.insfrastracture.adapters.input.rest.mapper.CourseRestMapper;
@@ -29,7 +29,7 @@ import java.util.List;
 public class CourseRestAdapter {
 
   private final CourseInputPort courseInputPort;
-  private final StudentsInputPort studentsInputPort;
+  private final ExternalStudentsInputPort externalStudentsInputPort;
   private final CourseRestMapper courseRestMapper;
 
   @GetMapping("/{id}")
@@ -63,21 +63,21 @@ public class CourseRestAdapter {
     courseInputPort.deleteById(id);
   }
 
-  @PutMapping("/course/{courseId}/student/{studentId}")
+  @PutMapping("/{courseId}/student/{studentId}")
   public Student addStudentToCourse(
       @PathVariable Long courseId, @PathVariable Long studentId) {
-    return studentsInputPort.addStudentToCourse(courseId, studentId);
+    return externalStudentsInputPort.addStudentToCourse(courseId, studentId);
   }
 
-  @DeleteMapping("/course/{courseId}/student/{studentId}")
+  @DeleteMapping("/{courseId}/student/{studentId}")
   public Student removeStudentFromCourse(
       @PathVariable Long courseId, @PathVariable Long studentId) {
-    return studentsInputPort.removeStudentFromCourse(courseId, studentId);
+    return externalStudentsInputPort.removeStudentFromCourse(courseId, studentId);
   }
 
   @DeleteMapping("/remove-student-from-collection/{studentId}")
   public void remoStudentFromCollection(@PathVariable Long studentId) {
-    studentsInputPort.removeStudentFromCollection(studentId);
+    externalStudentsInputPort.removeStudentFromCollection(studentId);
   }
 
 }

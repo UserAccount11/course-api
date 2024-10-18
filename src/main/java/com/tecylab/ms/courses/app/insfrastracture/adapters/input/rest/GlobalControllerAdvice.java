@@ -1,6 +1,7 @@
 package com.tecylab.ms.courses.app.insfrastracture.adapters.input.rest;
 
 import com.tecylab.ms.courses.app.domain.exceptions.CourseNotFoundException;
+import com.tecylab.ms.courses.app.domain.exceptions.NonEnrolledStudentException;
 import com.tecylab.ms.courses.app.domain.exceptions.StudentNotFoundException;
 import com.tecylab.ms.courses.app.insfrastracture.adapters.input.rest.models.enums.ErrorType;
 import com.tecylab.ms.courses.app.insfrastracture.adapters.input.rest.models.response.ErrorResponse;
@@ -21,6 +22,7 @@ import java.util.Collections;
 import static com.tecylab.ms.courses.app.insfrastracture.adapters.utils.CourseErrorCatalog.COURSE_BAD_PARAMETERS;
 import static com.tecylab.ms.courses.app.insfrastracture.adapters.utils.CourseErrorCatalog.COURSE_NOT_FOUND;
 import static com.tecylab.ms.courses.app.insfrastracture.adapters.utils.CourseErrorCatalog.INTERNAL_SERVER_ERROR;
+import static com.tecylab.ms.courses.app.insfrastracture.adapters.utils.CourseErrorCatalog.NON_ENROLLED_STUDENT;
 import static com.tecylab.ms.courses.app.insfrastracture.adapters.utils.CourseErrorCatalog.STUDENT_NOT_FOUND;
 import static com.tecylab.ms.courses.app.insfrastracture.adapters.utils.CourseErrorCatalog.WEB_CLIENT_ERROR;
 
@@ -48,6 +50,19 @@ public class GlobalControllerAdvice {
         .code(STUDENT_NOT_FOUND.getCode())
         .errorType(ErrorType.FUNCTIONAL)
         .genericMessage(STUDENT_NOT_FOUND.getGenericMessage())
+        .timestamp(LocalDate.now().toString())
+        .build();
+  }
+
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ExceptionHandler(NonEnrolledStudentException.class)
+  public ErrorResponse handleNonEnrolledStudentException(
+      NonEnrolledStudentException e) {
+    return ErrorResponse.builder()
+        .code(NON_ENROLLED_STUDENT.getCode())
+        .errorType(ErrorType.FUNCTIONAL)
+        .genericMessage(NON_ENROLLED_STUDENT.getGenericMessage())
+        .details(Collections.singletonList(e.getMessage()))
         .timestamp(LocalDate.now().toString())
         .build();
   }
